@@ -1,0 +1,76 @@
+#Знайти 5 студентів із найбільшим середнім балом з усіх предметів:
+SELECT s.fullname, AVG(g.grade) AS average_grade
+FROM students AS s
+INNER JOIN grades AS g ON s.id = g.student_id
+GROUP BY s.id
+ORDER BY average_grade DESC
+LIMIT 5;
+
+#Знайти студента із найвищим середнім балом з певного предмета:
+SELECT s.fullname, AVG(g.grade) AS average_grade
+FROM students AS s
+INNER JOIN grades AS g ON s.id = g.student_id
+INNER JOIN subject AS sub ON g.subject_id = sub.id
+WHERE sub.subject_name = 'Основи програмування'
+GROUP BY s.id
+ORDER BY average_grade DESC
+LIMIT 1;
+
+#Знайти середній бал у групах з певного предмета:
+SELECT g.group_name, AVG(gr.grade) AS average_grade
+FROM groups AS g
+INNER JOIN students AS s ON g.id = s.group_id
+INNER JOIN grades AS gr ON s.id = gr.student_id
+INNER JOIN subject AS sub ON gr.subject_id = sub.id
+WHERE sub.subject_name = 'Основи програмування'
+GROUP BY g.id;
+
+#Знайти середній бал на потоці (по всій таблиці оцінок):
+SELECT AVG(grade) AS average_grade
+FROM grades;
+
+#Знайти, які курси читає певний викладач:
+SELECT sub.subject_name
+FROM subject AS sub
+INNER JOIN teacher AS t ON sub.teacher_id = t.id
+WHERE t.fullname = 'ПІБ викладача';
+
+#Знайти список студентів у певній групі:
+SELECT s.fullname
+FROM students AS s
+INNER JOIN groups AS g ON s.group_id = g.id
+WHERE g.group_name = 'Назва групи';
+
+#Знайти оцінки студентів в окремій групі з певного предмета:
+SELECT s.fullname, gr.grade
+FROM students AS s
+INNER JOIN grades AS gr ON s.id = gr.student_id
+INNER JOIN subject AS sub ON gr.subject_id = sub.id
+INNER JOIN groups AS g ON s.group_id = g.id
+WHERE g.group_name = 'Назва групи' AND sub.subject_name = 'Основи програмування';
+
+#Знайти середній бал, який ставить певний викладач зі своїх предметів:
+SELECT t.fullname, AVG(g.grade) AS average_grade
+FROM teacher AS t
+INNER JOIN subject AS sub ON t.id = sub.teacher_id
+INNER JOIN grades AS g ON sub.id = g.subject_id
+GROUP BY t.id;
+
+
+#Знайти список курсів, які відвідує студент:
+SELECT sub.subject_name
+FROM subject AS sub
+INNER JOIN grades AS g ON sub.id = g.subject_id
+INNER JOIN students AS s ON g.student_id = s.id
+WHERE s.fullname = 'ПІБ студента';
+
+#Список курсів, які певному студенту читає певний викладач:
+SELECT sub.subject_name
+FROM subject AS sub
+INNER JOIN grades AS g ON sub.id = g.subject_id
+INNER JOIN students AS s ON g.student_id = s.id
+INNER JOIN teacher AS t ON sub.teacher_id = t.id
+WHERE s.fullname = 'ПІБ студента' AND t.fullname = 'ПІБ викладача';
+
+
+
